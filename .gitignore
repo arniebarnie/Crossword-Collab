@@ -62,4 +62,6 @@ crash.*.log
 *.log
 *.pem
 .vercel
-.turbo 
+.turbo
+
+.svc/
