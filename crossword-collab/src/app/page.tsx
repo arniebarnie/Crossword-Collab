@@ -1,35 +1,69 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { app } from '@/firebase/config';
+import { Box, Container, Typography, Paper, Button, Stack } from '@mui/material'
+import GoogleIcon from '@mui/icons-material/Google'
+import { auth } from '@/firebase/config'
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function Home() {
-  const [isConnected, setIsConnected] = useState<boolean | null>(null);
+  const [user, loading] = useAuthState(auth)
 
   useEffect(() => {
-    // Simple check if Firebase is initialized
-    if (app) {
-      setIsConnected(true);
-    } else {
-      setIsConnected(false);
+    if (user) {
+      redirect('/home')
     }
-  }, []);
+  }, [user])
+
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider()
+      await signInWithPopup(auth, provider)
+    } catch (error) {
+      console.error('Error signing in:', error)
+    }
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Crossword Collab</h1>
-        <div className="flex items-center gap-2 justify-center">
-          <span>Firebase Status:</span>
-          {isConnected === null ? (
-            <span>Checking...</span>
-          ) : isConnected ? (
-            <span className="text-green-600">Connected ✓</span>
-          ) : (
-            <span className="text-red-600">Not Connected ✗</span>
-          )}
-        </div>
-      </div>
-    </main>
-  );
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 4,
+        }}
+      >
+        <Typography variant="h2" component="h1" align="center" gutterBottom>
+          Crossword Collab
+        </Typography>
+
+        <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
+          <Stack spacing={2}>
+            <Typography variant="h6" align="center" gutterBottom>
+              Sign in to get started
+            </Typography>
+            
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<GoogleIcon />}
+              fullWidth
+              onClick={signInWithGoogle}
+            >
+              Sign in with Google
+            </Button>
+          </Stack>
+        </Paper>
+      </Box>
+    </Container>
+  )
 }
