@@ -11,7 +11,6 @@ export interface Word {
 }
 
 export interface Crossword {
-  id: string;
   words: Word[];
   dimensions: {
     length: number;
@@ -26,42 +25,5 @@ export interface Crossword {
 
 export interface User {
   name: string;
-  login: string;
   puzzlesCreated: string[];
 }
-
-export interface CrosswordMetadata {
-  id: string;
-  theme: string;
-  createdBy: string;
-  createdAt: Timestamp;
-}
-
-export interface GetUserCrosswordsData {
-  userId: string;
-}
-
-export interface GetCrosswordsByThemeData {
-  theme: string;
-}
-
-export interface GetCrosswordData {
-  crosswordId: string;
-}
-
-export interface CreateCrosswordData {
-  words: Word[];
-  dimensions: { length: number; width: number };
-  theme: string;
-}
-
-export interface UpdateCrosswordData {
-  crosswordId: string;
-  words: Word[];
-  dimensions: { length: number; width: number };
-  theme: string;
-}
-
-export interface DeleteCrosswordData {
-  crosswordId: string;
-} 
